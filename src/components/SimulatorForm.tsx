@@ -22,7 +22,7 @@ export function SimulatorForm({ input, onChange }: SimulatorFormProps) {
     <section className="rounded-lg border border-[#d9cfbf] bg-[#fffdf8] p-5 shadow-sm sm:p-6">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-xl font-semibold text-[#17211b]">Parametres</h2>
+          <h2 className="text-xl font-semibold text-[#17211b]">Paramètres</h2>
           <p className="mt-1 text-sm text-[#647067]">Ajustez les hypotheses de simulation.</p>
         </div>
       </div>
@@ -73,7 +73,7 @@ export function SimulatorForm({ input, onChange }: SimulatorFormProps) {
 
         <label className="grid gap-2">
           <span className="flex items-center justify-between gap-3 text-sm font-medium text-[#243127]">
-            <span>Duree d'investissement</span>
+            <span>Durée d'investissement</span>
             <span className="rounded-full bg-[#edf5ef] px-3 py-1 text-xs font-semibold text-[#0f6b4f]">
               {formatMonths(input.durationMonths)}
             </span>

@@ -17,15 +17,15 @@ export function SimulatorShell({ children }: SimulatorShellProps) {
               Simulateur crypto
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-[#536057] sm:text-lg">
-              Simulez l'evolution potentielle de votre investissement crypto selon votre strategie
+              Simulez l'évolution potentielle de votre investissement crypto selon votre stratégie
               d'investissement.
             </p>
           </div>
           <div className="rounded-lg border border-[#d9cfbf] bg-[#fffdf8]/80 p-5 shadow-sm">
-            <p className="text-sm font-semibold text-[#17211b]">Demo technique</p>
+            <p className="text-sm font-semibold text-[#17211b]">Simulation pédagogique</p>
             <p className="mt-2 text-sm leading-6 text-[#5f665f]">
-              Calcul compose mensuellement, DCA, frais simples et visualisation responsive. Aucun
-              prix crypto live n'est requis pour cette version.
+              Estimez l'évolution potentielle d'une stratégie crypto combinant investissement
+              initial, versements mensuels et rendement annualisé.
             </p>
           </div>
         </header>

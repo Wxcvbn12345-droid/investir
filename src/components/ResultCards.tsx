@@ -11,7 +11,7 @@ export function ResultCards({ result }: ResultCardsProps) {
   return (
     <section className="grid gap-4">
       <div className="rounded-lg border border-[#0f6b4f]/20 bg-[#0f6b4f] p-5 text-white shadow-sm">
-        <p className="text-sm font-medium text-white/75">Valeur finale estimee</p>
+        <p className="text-sm font-medium text-white/75">Valeur finale estimée</p>
         <p className="mt-2 text-3xl font-semibold">{formatCurrency(result.finalValue)}</p>
         <p className="mt-2 text-sm text-white/75">Projection pour {result.cryptoLabel}</p>
       </div>
@@ -19,7 +19,7 @@ export function ResultCards({ result }: ResultCardsProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         <MetricCard label="Capital total investi" value={formatCurrency(result.totalInvested)} />
         <MetricCard
-          label="Plus-value estimee"
+          label="Plus-value estimée"
           value={formatCurrency(result.estimatedGain)}
           tone={positiveGain ? "positive" : "negative"}
         />
@@ -32,7 +32,7 @@ export function ResultCards({ result }: ResultCardsProps) {
       </div>
 
       <div className="rounded-lg border border-[#d9cfbf] bg-[#fffdf8] p-5">
-        <h3 className="text-base font-semibold text-[#17211b]">Detail des apports</h3>
+        <h3 className="text-base font-semibold text-[#17211b]">Détail des apports</h3>
         <dl className="mt-4 grid gap-3 text-sm">
           <Row label="Investissement initial" value={formatCurrency(result.totalInitialInvestment)} />
           <Row

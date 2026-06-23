@@ -35,13 +35,13 @@ export function ProjectionChart({ points }: ProjectionChartProps) {
         <div>
           <h2 className="text-xl font-semibold text-[#17211b]">Projection</h2>
           <p className="mt-1 text-sm text-[#647067]">
-            Evolution estimee face au capital verse.
+             Évolution estimée face au capital versé.
           </p>
         </div>
         <div className="flex flex-wrap gap-3 text-xs font-semibold">
           <span className="inline-flex items-center gap-2 text-[#0f6b4f]">
             <span className="h-2.5 w-2.5 rounded-full bg-[#0f6b4f]" />
-            Valeur estimee
+            Valeur estimée
           </span>
           <span className="inline-flex items-center gap-2 text-[#936f2b]">
             <span className="h-2.5 w-2.5 rounded-full bg-[#c49a4a]" />
@@ -54,7 +54,7 @@ export function ProjectionChart({ points }: ProjectionChartProps) {
         <svg
           viewBox={`0 0 ${chartWidth} ${chartHeight}`}
           role="img"
-          aria-label="Graphique de projection du capital investi et de la valeur estimee"
+          aria-label="Graphique de projection du capital investi et de la valeur estimée"
           className="h-56 w-full sm:h-64"
         >
           <rect x="0" y="0" width={chartWidth} height={chartHeight} rx="8" fill="#fbf7ef" />
@@ -94,8 +94,8 @@ export function ProjectionChart({ points }: ProjectionChartProps) {
 
       <div className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
         <ChartStat label="Depart" value={formatCurrency(points[0]?.estimatedValue ?? 0)} />
-        <ChartStat label="Capital verse" value={formatCurrency(lastPoint?.investedCapital ?? 0)} />
-        <ChartStat label="Valeur estimee" value={formatCurrency(lastPoint?.estimatedValue ?? 0)} />
+        <ChartStat label="Capital versé" value={formatCurrency(lastPoint?.investedCapital ?? 0)} />
+        <ChartStat label="Valeur estimée" value={formatCurrency(lastPoint?.estimatedValue ?? 0)} />
       </div>
     </section>
   );

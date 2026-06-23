@@ -45,7 +45,7 @@ export function CryptoSimulator({ compact = false }: CryptoSimulatorProps) {
             </p>
             <h1 className="mt-2 text-2xl font-semibold text-[#17211b]">Simulateur crypto</h1>
             <p className="mt-2 text-sm leading-6 text-[#647067]">
-              Simulez l'evolution potentielle de votre investissement crypto selon votre strategie
+              Simulez l'évolution potentielle de votre investissement crypto selon votre stratégie
               d'investissement.
             </p>
           </div>

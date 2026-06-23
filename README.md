@@ -1,8 +1,8 @@
 # Simulateur Crypto S'investir
 
-Demo fonctionnelle d'un simulateur crypto autonome, construite dans l'esprit de la suite de simulateurs S'investir. L'application permet d'estimer l'evolution potentielle d'un investissement crypto avec investissement initial, DCA mensuel, duree, rendement annuel estime et frais simples.
+Démo fonctionnelle d'un simulateur crypto autonome, construite dans l'esprit de la suite de simulateurs S'investir. L'application permet d'estimer l'évolution potentielle d'un investissement crypto avec investissement initial, DCA mensuel, durée, rendement annuel estimé et frais simples.
 
-## Stack utilisee
+## Stack utilisée
 
 - Next.js avec App Router
 - TypeScript
@@ -21,7 +21,7 @@ Page principale : `http://localhost:3000`
 
 Page embarquable : `http://localhost:3000/embed`
 
-Note locale : la `.npmrc` du projet pointe vers `https://registry.yarnpkg.com/`, car certains environnements Windows bloquent l'acces SSL a `registry.npmjs.org`. Les commandes restent des commandes npm classiques.
+Note locale : la `.npmrc` du projet pointe vers `https://registry.yarnpkg.com/`, car certains environnements Windows bloquent l'accès SSL à `registry.npmjs.org`. Les commandes restent des commandes npm classiques.
 
 ## Commandes utiles
 
@@ -38,46 +38,46 @@ npm test
 npm run build
 ```
 
-## Deploiement
+## Déploiement
 
-Le projet est compatible Vercel sans configuration specifique.
+Le projet est compatible Vercel sans configuration spécifique.
 
 ## Choix techniques
 
-- Next.js est coherent avec la stack cible S'investir.
-- TypeScript apporte un typage clair des entrees, resultats et points de projection.
-- Tailwind permet une UI rapide a adapter avec de futurs design tokens.
-- La logique de calcul est isolee dans `src/lib/crypto-simulation.ts` pour faciliter les tests et la reutilisation.
-- La page `/embed` montre comment integrer le simulateur dans un format plus compact.
-- Aucun appel API externe n'est utilise : la demo reste autonome et deployable simplement.
-- Aucun package de chart n'a ete ajoute : le graphique est un SVG React leger et suffisant pour cette demo.
+- Next.js est cohérent avec la stack cible S'investir.
+- TypeScript apporte un typage clair des entrées, résultats et points de projection.
+- Tailwind permet une UI rapide à adapter avec de futurs design tokens.
+- La logique de calcul est isolée dans `src/lib/crypto-simulation.ts` pour faciliter les tests et la réutilisation.
+- La page `/embed` montre comment intégrer le simulateur dans un format plus compact.
+- Aucun appel API externe n'est utilisé : la démo reste autonome et déployable simplement.
+- Aucun package de chart n'a été ajouté : le graphique est un SVG React léger et suffisant pour cette démo.
 
-## Hypotheses de calcul
+## Hypothèses de calcul
 
-- Rendement annuel estime compose mensuellement.
-- Versements mensuels ajoutes au debut de chaque mois de projection.
-- Les frais d'entree s'appliquent a l'investissement initial et aux versements mensuels.
-- Les frais annuels sont convertis en taux mensuel compose et deduits chaque mois.
-- Pas de donnees crypto live.
-- Les resultats sont indicatifs et ne constituent pas un conseil financier.
+- Rendement annuel estimé composé mensuellement.
+- Versements mensuels ajoutés au début de chaque mois de projection.
+- Les frais d'entrée s'appliquent à l'investissement initial et aux versements mensuels.
+- Les frais annuels sont convertis en taux mensuel composé et déduits chaque mois.
+- Pas de données crypto live.
+- Les résultats sont indicatifs et ne constituent pas un conseil financier.
 
 ## Limites
 
-- Le design devra etre ajuste avec les design tokens exacts ou des captures validees de S'investir.
-- Pas de connexion a une API de prix crypto.
+- Le design devra être ajusté avec les design tokens exacts ou des captures validées de S'investir.
+- Pas de connexion à une API de prix crypto.
 - Pas de sauvegarde de simulation.
-- Les frais restent volontairement simplifies pour garder le modele comprehensible.
+- Les frais restent volontairement simplifiés pour garder le modèle compréhensible.
 
-## Suggestions d'amelioration pour S'investir
+## Suggestions d'amélioration pour S'investir
 
 - Harmoniser les simulateurs autour d'un design system commun.
-- Ajouter un mode embed standardise pour les articles et landing pages.
+- Ajouter un mode embed standardisé pour les articles et landing pages.
 - Proposer un export PDF ou un lien de partage de simulation.
-- Centraliser les hypotheses de calcul pour faciliter la maintenance.
-- Ajouter un tracking des conversions et des interactions cles.
-- Connecter certains simulateurs a HubSpot ou Google Sheets pour qualifier les leads.
+- Centraliser les hypothèses de calcul pour faciliter la maintenance.
+- Ajouter un tracking des conversions et des interactions clés.
+- Connecter certains simulateurs à HubSpot ou Google Sheets pour qualifier les leads.
 
-## Verification
+## Vérification
 
 ```bash
 npm test
@@ -91,23 +91,23 @@ Cas couverts par les tests unitaires :
 - rendement nul sans frais ;
 - versement mensuel nul ;
 - investissement initial nul ;
-- duree minimale ;
+- durée minimale ;
 - frais nuls et frais non nuls ;
 - investissement initial seul ;
 - DCA seul ;
 - investissement initial + DCA ;
-- duree courte et duree longue ;
-- capital investi correctement calcule.
+- durée courte et durée longue ;
+- capital investi correctement calculé.
 
-Checklist manuelle recommandee :
+Checklist manuelle recommandée :
 
-- valeurs par defaut ;
+- valeurs par défaut ;
 - investissement initial seul ;
 - DCA mensuel seul ;
 - investissement initial + DCA ;
-- rendement a 0 % ;
-- duree courte et duree longue ;
-- frais a 0 et frais superieurs a 0 ;
+- rendement à 0 % ;
+- durée courte et durée longue ;
+- frais à 0 et frais supérieurs à 0 ;
 - responsive mobile 375 px, tablette et desktop ;
-- absence de debordement horizontal ;
-- lisibilite des champs, resultats et graphique.
+- absence de débordement horizontal ;
+- lisibilité des champs, résultats et graphique.
