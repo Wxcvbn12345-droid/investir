@@ -35,7 +35,7 @@ export type SimulationResult = {
   endDate: string;
   initialNetInvestment: number;
   totalInitialInvestment: number;
-  totalMonthlyContributions: number;
+  totalPeriodicContributions: number;
   totalInvested: number;
   finalValue: number;
   estimatedGain: number;

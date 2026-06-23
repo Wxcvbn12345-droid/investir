@@ -19,14 +19,15 @@ const baseInput: SimulationInput = {
 
 test("rendement nul sans frais: valeur finale egale au capital investi", () => {
   const result = calculateCryptoSimulation(baseInput);
+  // monthly frequency: 100/period * 12 periods = 1200 + 1000 initial = 2200
   assert.equal(result.totalInvested, 2200);
   assert.equal(result.finalValue, 2200);
   assert.equal(result.estimatedGain, 0);
 });
 
-test("versement mensuel nul", () => {
+test("versement periodique nul", () => {
   const result = calculateCryptoSimulation({ ...baseInput, monthlyContribution: 0 });
-  assert.equal(result.totalMonthlyContributions, 0);
+  assert.equal(result.totalPeriodicContributions, 0);
   assert.equal(result.totalInvested, 1000);
 });
 
@@ -79,7 +80,8 @@ test("DCA seul sans investissement initial", () => {
   });
 
   assert.equal(result.totalInitialInvestment, 0);
-  assert.equal(result.totalMonthlyContributions, 1200);
+  // monthly: 200/period * 6 periods = 1200
+  assert.equal(result.totalPeriodicContributions, 1200);
   assert.equal(result.totalInvested, 1200);
 });
 
@@ -128,7 +130,7 @@ test("valeurs incoherentes normalisees", () => {
   });
 
   assert.equal(result.totalInitialInvestment, 0);
-  assert.equal(result.totalMonthlyContributions, 0);
+  assert.equal(result.totalPeriodicContributions, 0);
   assert.equal(result.totalInvested, 0);
   assert.equal(result.projection.length, 2);
 });
@@ -142,7 +144,7 @@ test("strategie initial-only explicite: pas de DCA", () => {
     monthlyContribution: 100,
     annualReturnRate: 5,
   });
-  assert.equal(result.totalMonthlyContributions, 0);
+  assert.equal(result.totalPeriodicContributions, 0);
   assert.equal(result.totalInvested, 1000);
   assert.equal(result.strategyLabel, "Investissement initial seul");
 });
@@ -156,7 +158,8 @@ test("strategie dca-only explicite: pas d investissement initial", () => {
     annualReturnRate: 5,
   });
   assert.equal(result.totalInitialInvestment, 0);
-  assert.equal(result.totalMonthlyContributions, 2400);
+  // monthly: 200/period * 12 periods = 2400
+  assert.equal(result.totalPeriodicContributions, 2400);
   assert.equal(result.strategyLabel, "DCA mensuel");
 });
 
@@ -168,49 +171,129 @@ test("strategie initial + DCA explicite", () => {
     monthlyContribution: 200,
   });
   assert.equal(result.totalInitialInvestment, 1000);
-  assert.equal(result.totalMonthlyContributions, 2400);
+  // monthly: 200/period * 12 periods = 2400
+  assert.equal(result.totalPeriodicContributions, 2400);
   assert.equal(result.totalInvested, 3400);
   assert.equal(result.strategyLabel, "Initial + DCA");
 });
 
 // --- New tests for frequency ---
 
-test("frequence mensuelle: un versement par mois", () => {
-  const monthly = calculateCryptoSimulation({
-    ...baseInput,
+test("DCA mensuel 100 EUR 12 mois 0% rendement 0% frais", () => {
+  const result = calculateCryptoSimulation({
+    crypto: "bitcoin",
+    strategy: "dca-only",
     frequency: "monthly",
-    monthlyContribution: 300,
+    startDate: "2025-01-01",
+    endDate: "2026-01-01",
+    initialInvestment: 0,
+    monthlyContribution: 100,
+    durationMonths: 12,
     annualReturnRate: 0,
+    entryFeeRate: 0,
+    annualFeeRate: 0,
   });
-  assert.equal(monthly.totalMonthlyContributions, 3600);
-  assert.equal(monthly.totalInvested, 4600);
-  assert.equal(monthly.frequencyLabel, "Mensuelle");
+  // 100/period * ~12 periods = ~1200
+  assert.ok(result.totalInvested >= 1190 && result.totalInvested <= 1210);
+  // Avec 0% rendement et 0% frais, finalValue === totalInvested
+  assert.equal(result.finalValue, result.totalInvested);
+  assert.equal(result.frequencyLabel, "Mensuelle");
 });
 
-test("frequence hebdomadaire: environ 4.33 versements par mois", () => {
-  const weekly = calculateCryptoSimulation({
+test("DCA hebdomadaire 100 EUR 12 mois 0% rendement 0% frais", () => {
+  const result = calculateCryptoSimulation({
+    crypto: "bitcoin",
+    strategy: "dca-only",
+    frequency: "weekly",
+    startDate: "2025-01-01",
+    endDate: "2026-01-01",
+    initialInvestment: 0,
+    monthlyContribution: 100,
+    durationMonths: 12,
+    annualReturnRate: 0,
+    entryFeeRate: 0,
+    annualFeeRate: 0,
+  });
+  // 100/period * ~52 periods = ~5200
+  assert.ok(result.totalInvested >= 5000 && result.totalInvested <= 5400);
+  // Avec 0% rendement et 0% frais, finalValue === totalInvested
+  assert.equal(result.finalValue, result.totalInvested);
+  assert.equal(result.frequencyLabel, "Hebdomadaire");
+});
+
+test("DCA quotidien 10 EUR 12 mois 0% rendement 0% frais", () => {
+  const result = calculateCryptoSimulation({
+    crypto: "bitcoin",
+    strategy: "dca-only",
+    frequency: "daily",
+    startDate: "2025-01-01",
+    endDate: "2026-01-01",
+    initialInvestment: 0,
+    monthlyContribution: 10,
+    durationMonths: 12,
+    annualReturnRate: 0,
+    entryFeeRate: 0,
+    annualFeeRate: 0,
+  });
+  // 10/period * ~365 periods = ~3650
+  assert.ok(result.totalInvested >= 3500 && result.totalInvested <= 3800);
+  // Avec 0% rendement et 0% frais, finalValue === totalInvested
+  assert.equal(result.finalValue, result.totalInvested);
+  assert.equal(result.frequencyLabel, "Quotidienne");
+});
+
+test("frais annuels > 0 en hebdomadaire reduisent la valeur finale", () => {
+  const withoutFees = calculateCryptoSimulation({
     ...baseInput,
     frequency: "weekly",
-    monthlyContribution: 433, // ~100 per week * 4.33 weeks
-    annualReturnRate: 0,
+    monthlyContribution: 100,
+    annualReturnRate: 5,
+    entryFeeRate: 0,
+    annualFeeRate: 0,
+    startDate: "2025-01-01",
+    endDate: "2026-01-01",
   });
-  // With entry fee and annual fee at 0, final value should equal total invested
-  assert.equal(weekly.frequencyLabel, "Hebdomadaire");
-  assert.ok(weekly.totalInvested > 0);
-  // Capital investi doit être cohérent
-  assert.ok(weekly.finalValue > 0);
+
+  const withFees = calculateCryptoSimulation({
+    ...baseInput,
+    frequency: "weekly",
+    monthlyContribution: 100,
+    annualReturnRate: 5,
+    entryFeeRate: 0,
+    annualFeeRate: 2,
+    startDate: "2025-01-01",
+    endDate: "2026-01-01",
+  });
+
+  assert.ok(withFees.finalValue < withoutFees.finalValue);
+  assert.ok(withFees.totalFeesPaid > 0);
 });
 
-test("frequence quotidienne: environ 30.42 versements par mois", () => {
-  const daily = calculateCryptoSimulation({
+test("frais annuels > 0 en quotidien reduisent la valeur finale", () => {
+  const withoutFees = calculateCryptoSimulation({
     ...baseInput,
     frequency: "daily",
-    monthlyContribution: 3042, // ~100 per day * 30.42 days
-    annualReturnRate: 0,
+    monthlyContribution: 10,
+    annualReturnRate: 5,
+    entryFeeRate: 0,
+    annualFeeRate: 0,
+    startDate: "2025-01-01",
+    endDate: "2026-01-01",
   });
-  assert.equal(daily.frequencyLabel, "Quotidienne");
-  assert.ok(daily.totalInvested > 0);
-  assert.ok(daily.finalValue > 0);
+
+  const withFees = calculateCryptoSimulation({
+    ...baseInput,
+    frequency: "daily",
+    monthlyContribution: 10,
+    annualReturnRate: 5,
+    entryFeeRate: 0,
+    annualFeeRate: 2,
+    startDate: "2025-01-01",
+    endDate: "2026-01-01",
+  });
+
+  assert.ok(withFees.finalValue < withoutFees.finalValue);
+  assert.ok(withFees.totalFeesPaid > 0);
 });
 
 // --- New tests for dates ---

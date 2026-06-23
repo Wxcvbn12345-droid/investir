@@ -23,8 +23,15 @@ const FREQUENCY_LABELS: Record<SimulationInput["frequency"], string> = {
 /** Number of periods per month for each frequency */
 const FREQUENCY_PERIODS_PER_MONTH: Record<SimulationInput["frequency"], number> = {
   monthly: 1,
-  weekly: 4.33,
-  daily: 30.42,
+  weekly: 52 / 12,       // ~4.333...
+  daily: 365.25 / 12,    // ~30.4375
+};
+
+/** Number of months in a full year cycle for period-based compounding */
+const PERIODS_PER_YEAR: Record<SimulationInput["frequency"], number> = {
+  monthly: 12,
+  weekly: 52,
+  daily: 365.25,
 };
 
 const clamp = (value: number, min: number, max: number) => {
@@ -63,16 +70,20 @@ export const getCryptoLabel = (input: Pick<SimulationInput, "crypto" | "customCr
 
 export const calculateCryptoSimulation = (rawInput: SimulationInput): SimulationResult => {
   const input = sanitizeSimulationInput(rawInput);
-  const monthlyReturnRate = Math.pow(1 + input.annualReturnRate / 100, 1 / 12) - 1;
-  const monthlyFeeRate = Math.pow(1 + input.annualFeeRate / 100, 1 / 12) - 1;
   const entryFeeMultiplier = 1 - input.entryFeeRate / 100;
   const periodsPerMonth = FREQUENCY_PERIODS_PER_MONTH[input.frequency];
+  const periodsPerYear = PERIODS_PER_YEAR[input.frequency];
   const totalMonths = input.durationMonths;
   const totalPeriods = Math.round(totalMonths * periodsPerMonth);
+  const totalYears = totalMonths / 12;
 
-  // Convert monthly contribution to per-period contribution
+  // The user input is the amount per period
   const periodContribution =
-    input.strategy === "initial-only" ? 0 : input.monthlyContribution / periodsPerMonth;
+    input.strategy === "initial-only" ? 0 : input.monthlyContribution;
+
+  // Per-period return and fee rates
+  const periodReturnRate = Math.pow(1 + input.annualReturnRate / 100, 1 / periodsPerYear) - 1;
+  const periodFeeRate = Math.pow(1 + input.annualFeeRate / 100, 1 / periodsPerYear) - 1;
 
   let estimatedValue = input.initialInvestment * entryFeeMultiplier;
   let totalFeesPaid = input.initialInvestment - estimatedValue;
@@ -91,22 +102,19 @@ export const calculateCryptoSimulation = (rawInput: SimulationInput): Simulation
     totalFeesPaid += periodContribution - periodContributionAfterEntryFee;
 
     estimatedValue += periodContributionAfterEntryFee;
-    // Apply monthly return rate at each period (compounded within the month)
-    estimatedValue *= Math.pow(1 + monthlyReturnRate, 1 / periodsPerMonth);
+    // Apply period return
+    estimatedValue *= 1 + periodReturnRate;
 
-    // Apply fees monthly (at the end of each month's periods)
-    const monthIndex = Math.ceil(period / periodsPerMonth);
-    const isLastPeriodOfMonth = period % periodsPerMonth === 0 || period === totalPeriods;
-    if (isLastPeriodOfMonth) {
-      const monthlyFeeAmount = estimatedValue * monthlyFeeRate;
-      estimatedValue -= monthlyFeeAmount;
-      totalFeesPaid += monthlyFeeAmount;
-    }
+    // Apply fees at each period (compounded per period)
+    const feeAmount = estimatedValue * periodFeeRate;
+    estimatedValue -= feeAmount;
+    totalFeesPaid += feeAmount;
 
+    // Monthly projection points for the chart
     const month = Math.floor(period / periodsPerMonth);
-    const investedCapital =
-      input.initialInvestment + periodContribution * period;
+    const investedCapital = input.initialInvestment + periodContribution * period;
 
+    // Push monthly points
     if (period % Math.round(periodsPerMonth) === 0 || period === totalPeriods) {
       projection.push({
         month,
@@ -118,18 +126,20 @@ export const calculateCryptoSimulation = (rawInput: SimulationInput): Simulation
     }
   }
 
-  // Ensure last point is always included
+  // Ensure last point is always included and matches final values
   const lastProjected = projection[projection.length - 1];
   const totalInvested = input.initialInvestment + periodContribution * totalPeriods;
   const estimatedGain = estimatedValue - totalInvested;
   const totalReturnRate = totalInvested > 0 ? (estimatedGain / totalInvested) * 100 : 0;
 
-  // If the last projected point doesn't match final values, update it
   if (lastProjected) {
     lastProjected.estimatedValue = estimatedValue;
     lastProjected.investedCapital = totalInvested;
     lastProjected.gains = estimatedValue - totalInvested;
   }
+
+  // Calculate total periodic contributions for display
+  const totalPeriodicContributions = periodContribution * totalPeriods;
 
   return {
     cryptoLabel: getCryptoLabel(input),
@@ -139,7 +149,7 @@ export const calculateCryptoSimulation = (rawInput: SimulationInput): Simulation
     endDate: input.endDate,
     initialNetInvestment: input.initialInvestment * entryFeeMultiplier,
     totalInitialInvestment: input.initialInvestment,
-    totalMonthlyContributions: input.monthlyContribution * totalMonths,
+    totalPeriodicContributions,
     totalInvested,
     finalValue: estimatedValue,
     estimatedGain,

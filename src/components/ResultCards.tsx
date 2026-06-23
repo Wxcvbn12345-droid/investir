@@ -45,8 +45,8 @@ export function ResultCards({ result }: ResultCardsProps) {
         <dl className="mt-4 grid gap-3 text-sm">
           <Row label="Investissement initial" value={formatCurrency(result.totalInitialInvestment)} />
           <Row
-            label="Versements mensuels cumulés"
-            value={formatCurrency(result.totalMonthlyContributions)}
+            label="Versements périodiques cumulés"
+            value={formatCurrency(result.totalPeriodicContributions)}
           />
           <Row label="Capital initial net de frais" value={formatCurrency(result.initialNetInvestment)} />
         </dl>
