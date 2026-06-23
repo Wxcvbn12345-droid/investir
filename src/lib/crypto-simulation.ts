@@ -75,15 +75,17 @@ export const calculateCryptoSimulation = (rawInput: SimulationInput): Simulation
   const periodsPerYear = PERIODS_PER_YEAR[input.frequency];
   const totalMonths = input.durationMonths;
   const totalPeriods = Math.round(totalMonths * periodsPerMonth);
-  const totalYears = totalMonths / 12;
+  const monthlyProjectionInterval = Math.round(periodsPerMonth);
+  const safePeriodsPerMonth = periodsPerMonth > 0 ? periodsPerMonth : 1;
+  const safePeriodsPerYear = periodsPerYear > 0 ? periodsPerYear : 12;
 
   // The user input is the amount per period
   const periodContribution =
     input.strategy === "initial-only" ? 0 : input.monthlyContribution;
 
   // Per-period return and fee rates
-  const periodReturnRate = Math.pow(1 + input.annualReturnRate / 100, 1 / periodsPerYear) - 1;
-  const periodFeeRate = Math.pow(1 + input.annualFeeRate / 100, 1 / periodsPerYear) - 1;
+  const periodReturnRate = Math.pow(1 + input.annualReturnRate / 100, 1 / safePeriodsPerYear) - 1;
+  const periodFeeRate = Math.pow(1 + input.annualFeeRate / 100, 1 / safePeriodsPerYear) - 1;
 
   let estimatedValue = input.initialInvestment * entryFeeMultiplier;
   let totalFeesPaid = input.initialInvestment - estimatedValue;
@@ -111,11 +113,11 @@ export const calculateCryptoSimulation = (rawInput: SimulationInput): Simulation
     totalFeesPaid += feeAmount;
 
     // Monthly projection points for the chart
-    const month = Math.floor(period / periodsPerMonth);
+    const month = Math.floor(period / safePeriodsPerMonth);
     const investedCapital = input.initialInvestment + periodContribution * period;
 
     // Push monthly points
-    if (period % Math.round(periodsPerMonth) === 0 || period === totalPeriods) {
+    if (period % monthlyProjectionInterval === 0 || period === totalPeriods) {
       projection.push({
         month,
         year: month / 12,

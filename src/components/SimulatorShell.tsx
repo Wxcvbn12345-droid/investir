@@ -24,8 +24,8 @@ export function SimulatorShell({ children }: SimulatorShellProps) {
           <div className="rounded-lg border border-[#d9cfbf] bg-[#fffdf8]/80 p-5 shadow-sm">
             <p className="text-sm font-semibold text-[#17211b]">Simulation pédagogique</p>
             <p className="mt-2 text-sm leading-6 text-[#5f665f]">
-              Estimez l'évolution potentielle d'une stratégie crypto combinant investissement
-              initial, versements mensuels et rendement annualisé.
+               Estimez l'évolution potentielle d'une stratégie crypto combinant investissement
+               initial, versements périodiques et rendement annualisé.
             </p>
           </div>
         </header>

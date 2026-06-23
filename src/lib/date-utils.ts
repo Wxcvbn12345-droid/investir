@@ -5,7 +5,10 @@
 export const computeDurationMonths = (startDate: string, endDate: string): number => {
   const start = new Date(startDate);
   const end = new Date(endDate);
-  const diffMs = end.getTime() - start.getTime();
+  const startTime = start.getTime();
+  const endTime = end.getTime();
+  if (Number.isNaN(startTime) || Number.isNaN(endTime)) return 1;
+  const diffMs = endTime - startTime;
   if (diffMs <= 0) return 1;
   return Math.max(1, Math.round(diffMs / (1000 * 60 * 60 * 24 * 30.44)));
 };

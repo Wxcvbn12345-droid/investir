@@ -13,7 +13,11 @@ export const formatPercent = (value: number) =>
   }).format(value / 100);
 
 export const formatMonths = (months: number) => {
+  if (!Number.isFinite(months) || months < 1) return "1 mois";
   if (months < 12) return `${months} mois`;
   const years = months / 12;
-  return Number.isInteger(years) ? `${years} ans` : `${years.toFixed(1).replace(".", ",")} ans`;
+  if (Number.isInteger(years)) {
+    return years === 1 ? "1 an" : `${years} ans`;
+  }
+  return `${years.toFixed(1).replace(".", ",")} ans`;
 };
