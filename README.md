@@ -123,7 +123,7 @@ Capture de la page principale : `docs/screenshot-home.png`.
 Cas couverts par les tests unitaires :
 
 - rendement nul sans frais
-- versement mensuel nul
+- versement périodique nul
 - investissement initial nul
 - durée minimale
 - frais nuls et frais non nuls
@@ -146,7 +146,7 @@ Checklist manuelle recommandée :
 
 - valeurs par défaut
 - investissement initial seul
-- DCA mensuel seul
+- DCA avec fréquence mensuelle
 - investissement initial + DCA
 - rendement à 0 %
 - durée courte et durée longue
