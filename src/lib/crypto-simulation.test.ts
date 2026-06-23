@@ -91,3 +91,20 @@ test("duree courte et duree longue produisent des projections coherentes", () =>
   assert.equal(longResult.projection.length, 361);
   assert.ok(longResult.totalInvested > shortResult.totalInvested);
 });
+
+test("valeurs incoherentes normalisees", () => {
+  const result = calculateCryptoSimulation({
+    ...baseInput,
+    initialInvestment: -1000,
+    monthlyContribution: -250,
+    durationMonths: -24,
+    annualReturnRate: 500,
+    entryFeeRate: -3,
+    annualFeeRate: -2,
+  });
+
+  assert.equal(result.totalInitialInvestment, 0);
+  assert.equal(result.totalMonthlyContributions, 0);
+  assert.equal(result.totalInvested, 0);
+  assert.equal(result.projection.length, 2);
+});
