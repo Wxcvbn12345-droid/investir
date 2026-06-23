@@ -3,6 +3,7 @@ node_modules
 out
 build
 docs/vercel-check
+docs/final-check
 .env*
 !.env.example
 npm-debug.log*

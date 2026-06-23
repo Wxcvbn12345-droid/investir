@@ -70,11 +70,3 @@ input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   appearance: none;
 }
-
-@media (max-width: 520px) {
-  main {
-    width: 100%;
-    max-width: 375px;
-    margin-inline: auto;
-  }
-}

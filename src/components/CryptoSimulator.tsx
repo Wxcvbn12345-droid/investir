@@ -30,7 +30,13 @@ export function CryptoSimulator({ compact = false }: CryptoSimulatorProps) {
   };
 
   return (
-    <div className={compact ? "mx-auto max-w-5xl" : "grid gap-6 lg:grid-cols-[420px_1fr]"}>
+    <div
+      className={
+        compact
+          ? "mx-auto w-full max-w-5xl"
+          : "grid w-full max-w-full gap-6 lg:grid-cols-[420px_1fr]"
+      }
+    >
       <div className="grid content-start gap-5">
         {compact ? (
           <div className="mb-1">

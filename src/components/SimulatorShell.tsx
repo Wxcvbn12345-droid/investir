@@ -6,8 +6,8 @@ type SimulatorShellProps = {
 
 export function SimulatorShell({ children }: SimulatorShellProps) {
   return (
-    <main className="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8">
+    <main className="w-full max-w-full min-h-screen px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
         <header className="grid gap-6 border-b border-[#d9cfbf] pb-7 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
             <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-[#936f2b]">
