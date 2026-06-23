@@ -19,7 +19,10 @@
 
 html {
   min-width: 320px;
+  width: 100%;
+  max-width: 100%;
   background: var(--background);
+  overflow-x: hidden;
 }
 
 body {
@@ -29,12 +32,34 @@ body {
     linear-gradient(180deg, #fbf7ef 0%, #f4efe5 48%, #efe7d8 100%);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+main,
+section,
+article,
+div,
+header,
+aside,
+form {
+  min-width: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+span,
+dt,
+dd {
+  overflow-wrap: break-word;
 }
 
 button,
 input,
 select {
   font: inherit;
+  max-width: 100%;
 }
 
 input[type="number"] {
@@ -44,4 +69,12 @@ input[type="number"] {
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   appearance: none;
+}
+
+@media (max-width: 520px) {
+  main {
+    width: 100%;
+    max-width: 375px;
+    margin-inline: auto;
+  }
 }
