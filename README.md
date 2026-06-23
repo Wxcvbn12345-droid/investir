@@ -22,7 +22,7 @@ Démo fonctionnelle d'un simulateur crypto autonome, construite dans l'esprit de
 - **Période de simulation** : date de début et date de fin avec durée calculée automatiquement
 - **Fréquence d'investissement** : mensuelle, hebdomadaire ou quotidienne
 - Sélection parmi 4 cryptos (Bitcoin, Ethereum, Solana, personnalisée)
-- Rendement annuel estimé composé mensuellement
+- Rendement annuel estimé composé selon la fréquence sélectionnée
 - Frais d'entrée et frais annuels
 - Graphique de projection SVG interactif
 - Résultats formatés en euros
@@ -85,10 +85,10 @@ Dans une intégration réelle, la page `/embed` pourrait être affichée via ifr
 
 ## Hypothèses de calcul
 
-- Rendement annuel estimé composé mensuellement.
+- Rendement annuel estimé composé selon la fréquence sélectionnée.
 - Versements périodiques ajoutés au début de chaque période de projection.
 - Les frais d'entrée s'appliquent à l'investissement initial et aux versements périodiques.
-- Les frais annuels sont convertis en taux mensuel composé et déduits chaque mois.
+- Les frais annuels sont convertis en taux périodique selon la fréquence sélectionnée.
 - La durée est calculée automatiquement à partir des dates de début et de fin.
 - Pas de données crypto live.
 - Les résultats sont indicatifs et ne constituent pas un conseil financier.

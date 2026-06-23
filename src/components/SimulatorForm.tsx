@@ -16,7 +16,7 @@ const numberValue = (value: string) => {
 
 const STRATEGY_OPTIONS: { value: SimulationInput["strategy"]; label: string }[] = [
   { value: "initial-only", label: "Investissement initial seul" },
-  { value: "dca-only", label: "DCA mensuel" },
+  { value: "dca-only", label: "DCA périodique" },
   { value: "initial-dca", label: "Initial + DCA" },
 ];
 

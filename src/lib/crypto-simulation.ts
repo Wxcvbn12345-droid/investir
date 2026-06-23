@@ -10,7 +10,7 @@ const CRYPTO_LABELS: Record<SimulationInput["crypto"], string> = {
 
 const STRATEGY_LABELS: Record<SimulationInput["strategy"], string> = {
   "initial-only": "Investissement initial seul",
-  "dca-only": "DCA mensuel",
+  "dca-only": "DCA périodique",
   "initial-dca": "Initial + DCA",
 };
 

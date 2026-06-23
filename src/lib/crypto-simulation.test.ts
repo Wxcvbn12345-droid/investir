@@ -160,7 +160,7 @@ test("strategie dca-only explicite: pas d investissement initial", () => {
   assert.equal(result.totalInitialInvestment, 0);
   // monthly: 200/period * 12 periods = 2400
   assert.equal(result.totalPeriodicContributions, 2400);
-  assert.equal(result.strategyLabel, "DCA mensuel");
+  assert.equal(result.strategyLabel, "DCA périodique");
 });
 
 test("strategie initial + DCA explicite", () => {
