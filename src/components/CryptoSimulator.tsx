@@ -8,8 +8,24 @@ import { ProjectionChart } from "./ProjectionChart";
 import { ResultCards } from "./ResultCards";
 import { SimulatorForm } from "./SimulatorForm";
 
+const getDefaultDates = () => {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), 1);
+  const end = new Date(now.getFullYear() + 10, now.getMonth(), 1);
+  return {
+    startDate: start.toISOString().slice(0, 10),
+    endDate: end.toISOString().slice(0, 10),
+  };
+};
+
+const { startDate, endDate } = getDefaultDates();
+
 const defaultInput: SimulationInput = {
   crypto: "bitcoin",
+  strategy: "initial-dca",
+  frequency: "monthly",
+  startDate,
+  endDate,
   initialInvestment: 5000,
   monthlyContribution: 250,
   durationMonths: 120,

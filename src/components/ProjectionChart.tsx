@@ -93,7 +93,7 @@ export function ProjectionChart({ points }: ProjectionChartProps) {
       </div>
 
       <div className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
-        <ChartStat label="Depart" value={formatCurrency(points[0]?.estimatedValue ?? 0)} />
+        <ChartStat label="Départ" value={formatCurrency(points[0]?.estimatedValue ?? 0)} />
         <ChartStat label="Capital versé" value={formatCurrency(lastPoint?.investedCapital ?? 0)} />
         <ChartStat label="Valeur estimée" value={formatCurrency(lastPoint?.estimatedValue ?? 0)} />
       </div>

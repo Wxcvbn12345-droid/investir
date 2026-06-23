@@ -1,8 +1,16 @@
 export type CryptoChoice = "bitcoin" | "ethereum" | "solana" | "custom";
 
+export type InvestmentStrategy = "initial-only" | "dca-only" | "initial-dca";
+
+export type InvestmentFrequency = "monthly" | "weekly" | "daily";
+
 export type SimulationInput = {
   crypto: CryptoChoice;
   customCryptoName?: string;
+  strategy: InvestmentStrategy;
+  frequency: InvestmentFrequency;
+  startDate: string;
+  endDate: string;
   initialInvestment: number;
   monthlyContribution: number;
   durationMonths: number;
@@ -21,6 +29,10 @@ export type ProjectionPoint = {
 
 export type SimulationResult = {
   cryptoLabel: string;
+  strategyLabel: string;
+  frequencyLabel: string;
+  startDate: string;
+  endDate: string;
   initialNetInvestment: number;
   totalInitialInvestment: number;
   totalMonthlyContributions: number;

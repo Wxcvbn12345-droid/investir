@@ -10,12 +10,20 @@ export function ResultCards({ result }: ResultCardsProps) {
 
   return (
     <section className="grid gap-4">
-      <div className="rounded-lg border border-[#0f6b4f]/20 bg-[#0f6b4f] p-5 text-white shadow-sm">
-        <p className="text-sm font-medium text-white/75">Valeur finale estimée</p>
-        <p className="mt-2 text-3xl font-semibold">{formatCurrency(result.finalValue)}</p>
-        <p className="mt-2 text-sm text-white/75">Projection pour {result.cryptoLabel}</p>
+      {/* Hero result card */}
+      <div className="rounded-xl border border-[#0f6b4f]/20 bg-gradient-to-br from-[#0f6b4f] to-[#0a5640] p-6 text-white shadow-md">
+        <p className="text-sm font-medium tracking-wide text-white/70">Valeur finale estimée</p>
+        <p className="mt-2 text-4xl font-bold tracking-tight">{formatCurrency(result.finalValue)}</p>
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-white/70">
+          <span>Projection pour {result.cryptoLabel}</span>
+          <span className="hidden sm:inline">&middot;</span>
+          <span>{result.strategyLabel}</span>
+          <span className="hidden sm:inline">&middot;</span>
+          <span>{result.frequencyLabel}</span>
+        </div>
       </div>
 
+      {/* Metric cards */}
       <div className="grid gap-4 sm:grid-cols-2">
         <MetricCard label="Capital total investi" value={formatCurrency(result.totalInvested)} />
         <MetricCard
@@ -28,15 +36,16 @@ export function ResultCards({ result }: ResultCardsProps) {
           value={formatPercent(result.totalReturnRate)}
           tone={positiveGain ? "positive" : "negative"}
         />
-        <MetricCard label="Frais estimes" value={formatCurrency(result.totalFeesPaid)} />
+        <MetricCard label="Frais estimés" value={formatCurrency(result.totalFeesPaid)} />
       </div>
 
-      <div className="rounded-lg border border-[#d9cfbf] bg-[#fffdf8] p-5">
+      {/* Details breakdown */}
+      <div className="rounded-xl border border-[#d9cfbf] bg-[#fffdf8] p-5 shadow-sm">
         <h3 className="text-base font-semibold text-[#17211b]">Détail des apports</h3>
         <dl className="mt-4 grid gap-3 text-sm">
           <Row label="Investissement initial" value={formatCurrency(result.totalInitialInvestment)} />
           <Row
-            label="Versements mensuels cumules"
+            label="Versements mensuels cumulés"
             value={formatCurrency(result.totalMonthlyContributions)}
           />
           <Row label="Capital initial net de frais" value={formatCurrency(result.initialNetInvestment)} />
@@ -61,9 +70,9 @@ function MetricCard({ label, value, tone = "default" }: MetricCardProps) {
         : "text-[#17211b]";
 
   return (
-    <article className="rounded-lg border border-[#d9cfbf] bg-[#fffdf8] p-4 shadow-sm">
+    <article className="rounded-xl border border-[#d9cfbf] bg-[#fffdf8] p-5 shadow-sm transition hover:shadow-md">
       <p className="text-sm text-[#647067]">{label}</p>
-      <p className={`mt-2 text-2xl font-semibold ${toneClass}`}>{value}</p>
+      <p className={`mt-2 text-3xl font-semibold tracking-tight ${toneClass}`}>{value}</p>
     </article>
   );
 }
