@@ -3,6 +3,7 @@
 import type { SimulationInput } from "@/types/simulator";
 import { formatMonths } from "@/lib/format";
 import { computeDurationMonths } from "@/lib/date-utils";
+import { CRYPTO_RETURN_PRESETS } from "@/lib/crypto-presets";
 
 type SimulatorFormProps = {
   input: SimulationInput;
@@ -33,6 +34,10 @@ export function SimulatorForm({ input, onChange }: SimulatorFormProps) {
     // Auto-compute duration when dates change
     if (key === "startDate" || key === "endDate") {
       next.durationMonths = computeDurationMonths(next.startDate, next.endDate);
+    }
+
+    if (key === "crypto") {
+      next.annualReturnRate = CRYPTO_RETURN_PRESETS[value as SimulationInput["crypto"]];
     }
 
     // Force monthly contribution to zero based on strategy
@@ -70,6 +75,9 @@ export function SimulatorForm({ input, onChange }: SimulatorFormProps) {
             <option value="solana">Solana</option>
             <option value="custom">Autre crypto personnalisée</option>
           </select>
+          <span className="text-xs leading-5 text-[#647067]">
+            Rendement indicatif modifiable : Bitcoin 8 %, Ethereum 10 %, Solana 12 %.
+          </span>
         </label>
 
         {input.crypto === "custom" ? (
@@ -236,7 +244,9 @@ type NumberFieldProps = {
 function NumberField({ label, suffix, value, min, max, step = 1, onChange }: NumberFieldProps) {
   return (
     <label className="grid gap-2">
-      <span className="text-sm font-medium text-[#243127]">{label}</span>
+      <span className="text-sm font-medium text-[#243127] sm:flex sm:min-h-10 sm:items-end">
+        {label}
+      </span>
       <span className="flex h-12 items-center overflow-hidden rounded-lg border border-[#cfc3b0] bg-white transition focus-within:border-[#0f6b4f] focus-within:ring-2 focus-within:ring-[#0f6b4f]/20">
         <input
           type="number"

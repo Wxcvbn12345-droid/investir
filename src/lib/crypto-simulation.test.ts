@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { calculateCryptoSimulation } from "./crypto-simulation.ts";
+import { CRYPTO_RETURN_PRESETS } from "./crypto-presets.ts";
 import type { SimulationInput } from "../types/simulator.ts";
 
 const baseInput: SimulationInput = {
@@ -16,6 +17,12 @@ const baseInput: SimulationInput = {
   entryFeeRate: 0,
   annualFeeRate: 0,
 };
+
+test("presets de rendement differents selon la crypto", () => {
+  assert.equal(CRYPTO_RETURN_PRESETS.bitcoin, 8);
+  assert.equal(CRYPTO_RETURN_PRESETS.ethereum, 10);
+  assert.equal(CRYPTO_RETURN_PRESETS.solana, 12);
+});
 
 test("rendement nul sans frais: valeur finale egale au capital investi", () => {
   const result = calculateCryptoSimulation(baseInput);
