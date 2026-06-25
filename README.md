@@ -91,8 +91,8 @@ Dans une intégration réelle, la page `/embed` pourrait être affichée via ifr
 - Les frais annuels sont convertis en taux périodique selon la fréquence sélectionnée.
 - La durée est calculée automatiquement à partir des dates de début et de fin.
 - Pas de données crypto live.
-- Le choix Bitcoin, Ethereum ou Solana applique un rendement indicatif initial de 8 %, 10 % ou
-  12 %. Cette hypothèse reste modifiable et ne constitue pas une prévision.
+- Le rendement annuel est une hypothèse renseignée par l'utilisateur. Sans données de marché, la
+  crypto sélectionnée sert au libellé et n'influence pas automatiquement le rendement.
 - Les résultats sont indicatifs et ne constituent pas un conseil financier.
 
 ## Limites

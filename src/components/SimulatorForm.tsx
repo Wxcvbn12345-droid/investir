@@ -3,7 +3,6 @@
 import type { SimulationInput } from "@/types/simulator";
 import { formatMonths } from "@/lib/format";
 import { computeDurationMonths } from "@/lib/date-utils";
-import { CRYPTO_RETURN_PRESETS } from "@/lib/crypto-presets";
 
 type SimulatorFormProps = {
   input: SimulationInput;
@@ -34,10 +33,6 @@ export function SimulatorForm({ input, onChange }: SimulatorFormProps) {
     // Auto-compute duration when dates change
     if (key === "startDate" || key === "endDate") {
       next.durationMonths = computeDurationMonths(next.startDate, next.endDate);
-    }
-
-    if (key === "crypto") {
-      next.annualReturnRate = CRYPTO_RETURN_PRESETS[value as SimulationInput["crypto"]];
     }
 
     // Force monthly contribution to zero based on strategy
@@ -76,7 +71,8 @@ export function SimulatorForm({ input, onChange }: SimulatorFormProps) {
             <option value="custom">Autre crypto personnalisée</option>
           </select>
           <span className="text-xs leading-5 text-[#647067]">
-            Rendement indicatif modifiable : Bitcoin 8 %, Ethereum 10 %, Solana 12 %.
+            Sans données de marché, la crypto sélectionnée n'influence pas automatiquement le
+            rendement.
           </span>
         </label>
 
