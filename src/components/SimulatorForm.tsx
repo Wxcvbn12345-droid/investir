@@ -71,8 +71,7 @@ export function SimulatorForm({ input, onChange }: SimulatorFormProps) {
             <option value="custom">Autre crypto personnalisée</option>
           </select>
           <span className="text-xs leading-5 text-[#647067]">
-            Sans données de marché, la crypto sélectionnée n'influence pas automatiquement le
-            rendement.
+            Le rendement annuel est pré-rempli selon la crypto sélectionnée, mais reste modifiable.
           </span>
         </label>
 
