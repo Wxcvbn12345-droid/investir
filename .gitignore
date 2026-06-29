@@ -9,4 +9,5 @@ docs/final-check
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+build_log.txt
 .DS_Store

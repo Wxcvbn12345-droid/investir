@@ -10,12 +10,20 @@ import { ResultCards } from "./ResultCards";
 import { SimulatorForm } from "./SimulatorForm";
 
 const getDefaultDates = () => {
+  const formatDateInputValue = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   const now = new Date();
   const start = new Date(now.getFullYear(), now.getMonth(), 1);
   const end = new Date(now.getFullYear() + 10, now.getMonth(), 1);
+
   return {
-    startDate: start.toISOString().slice(0, 10),
-    endDate: end.toISOString().slice(0, 10),
+    startDate: formatDateInputValue(start),
+    endDate: formatDateInputValue(end),
   };
 };
 
