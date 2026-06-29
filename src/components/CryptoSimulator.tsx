@@ -1,19 +1,13 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { getDefaultAnnualReturnForCrypto } from "@/lib/crypto-market-assumptions";
 import { calculateCryptoSimulation, sanitizeSimulationInput } from "@/lib/crypto-simulation";
 import type { SimulationInput } from "@/types/simulator";
 import { Disclaimer } from "./Disclaimer";
 import { ProjectionChart } from "./ProjectionChart";
 import { ResultCards } from "./ResultCards";
 import { SimulatorForm } from "./SimulatorForm";
-
-const CRYPTO_DEFAULT_RETURNS: Record<SimulationInput["crypto"], number> = {
-  bitcoin: 8,
-  ethereum: 10,
-  solana: 12,
-  custom: 0,
-};
 
 const getDefaultDates = () => {
   const now = new Date();
@@ -49,10 +43,15 @@ export function CryptoSimulator({ compact = false }: CryptoSimulatorProps) {
   const [input, setInput] = useState<SimulationInput>(defaultInput);
   const result = useMemo(() => calculateCryptoSimulation(input), [input]);
   const handleInputChange = useCallback((nextInput: SimulationInput) => {
-    if (nextInput.crypto !== input.crypto) {
-      nextInput.annualReturnRate = CRYPTO_DEFAULT_RETURNS[nextInput.crypto] ?? 0;
-    }
-    setInput(sanitizeSimulationInput(nextInput));
+    const adjustedInput =
+      nextInput.crypto !== input.crypto
+        ? {
+            ...nextInput,
+            annualReturnRate: getDefaultAnnualReturnForCrypto(nextInput.crypto),
+          }
+        : nextInput;
+
+    setInput(sanitizeSimulationInput(adjustedInput));
   }, [input.crypto]);
 
   return (

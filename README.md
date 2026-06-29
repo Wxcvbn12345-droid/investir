@@ -22,7 +22,7 @@ Démo fonctionnelle d'un simulateur crypto autonome, construite dans l'esprit de
 - **Période de simulation** : date de début et date de fin avec durée calculée automatiquement
 - **Fréquence d'investissement** : mensuelle, hebdomadaire ou quotidienne
 - Sélection parmi 4 cryptos (Bitcoin, Ethereum, Solana, personnalisée)
-- Rendement annuel estimé composé selon la fréquence sélectionnée
+- Rendement annuel estimé pré-rempli selon la crypto, puis entièrement modifiable
 - Frais d'entrée et frais annuels
 - Graphique de projection SVG interactif
 - Résultats formatés en euros
@@ -78,6 +78,7 @@ Dans une intégration réelle, la page `/embed` pourrait être affichée via ifr
 - TypeScript apporte un typage clair des entrées, résultats et points de projection.
 - Tailwind permet une UI rapide à adapter avec de futurs design tokens.
 - La logique de calcul est isolée dans `src/lib/crypto-simulation.ts` pour faciliter les tests et la réutilisation.
+- Les hypothèses de rendement par crypto sont isolées dans `src/lib/crypto-market-assumptions.ts`.
 - La page `/embed` montre comment intégrer le simulateur dans un format plus compact.
 - Aucun appel API externe n'est utilisé : la démo reste autonome et déployable simplement.
 - Aucun package de chart n'a été ajouté : le graphique est un SVG React léger et suffisant pour cette démo.
@@ -91,9 +92,49 @@ Dans une intégration réelle, la page `/embed` pourrait être affichée via ifr
 - Les frais annuels sont convertis en taux périodique selon la fréquence sélectionnée.
 - La durée est calculée automatiquement à partir des dates de début et de fin.
 - Pas de données crypto live.
-- Le rendement annuel est une hypothèse renseignée par l'utilisateur. Sans données de marché, la
-  crypto sélectionnée sert au libellé et n'influence pas automatiquement le rendement.
+- Le rendement annuel est pré-rempli avec une hypothèse de démonstration différente selon la crypto
+  sélectionnée : Bitcoin, Ethereum et Solana donnent donc des résultats différents par défaut.
+- Ces valeurs restent des hypothèses, pas des prévisions de marché. L'utilisateur peut les modifier
+  librement avant de lancer sa lecture du résultat.
 - Les résultats sont indicatifs et ne constituent pas un conseil financier.
+
+## Ajouter de vraies données historiques plus tard
+
+La démo actuelle utilise un rendement annualisé simple, volontairement facile à lire et à tester.
+Pour en faire un vrai simulateur crypto basé sur l'historique, il faut remplacer les hypothèses de
+`src/lib/crypto-market-assumptions.ts` par une source de prix historiques.
+
+La manière la plus propre de le faire serait :
+
+1. Créer un fichier dédié, par exemple `src/lib/crypto-historical-prices.ts`.
+2. Y exposer une fonction simple du type :
+
+```ts
+type HistoricalPricePoint = {
+  date: string;
+  price: number;
+};
+
+async function getHistoricalPrices(
+  crypto: "bitcoin" | "ethereum" | "solana",
+  startDate: string,
+  endDate: string,
+): Promise<HistoricalPricePoint[]> {
+  // Appel API, lecture d'un fichier JSON, ou lecture depuis une base de données.
+}
+```
+
+3. Remplacer le rendement annualisé moyen par une progression basée sur les vrais prix entre la date
+   de début et la date de fin.
+4. Garder `src/lib/crypto-simulation.ts` comme moteur de calcul principal, mais lui fournir une
+   courbe de prix au lieu d'un taux annuel fixe.
+5. Ajouter des tests avec un petit jeu de données historique figé pour vérifier que le backtest reste
+   stable dans le temps.
+
+Avec cette structure, l'interface n'a presque pas besoin de changer : la crypto sélectionnée, la date
+de début, la date de fin et la fréquence existent déjà. Il faudra surtout brancher une source fiable
+de prix historiques, puis choisir une règle claire pour les dates sans prix disponible, par exemple
+prendre le prix disponible le plus proche.
 
 ## Limites
 

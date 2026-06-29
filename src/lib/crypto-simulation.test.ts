@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { calculateCryptoSimulation } from "./crypto-simulation.ts";
+import { getDefaultAnnualReturnForCrypto } from "./crypto-market-assumptions.ts";
 import type { SimulationInput } from "../types/simulator.ts";
 
 const baseInput: SimulationInput = {
@@ -381,4 +382,15 @@ test("resultats incluent les labels de strategie et frequence", () => {
   assert.ok(result.frequencyLabel.length > 0);
   assert.ok(typeof result.startDate === "string");
   assert.ok(typeof result.endDate === "string");
+});
+
+test("les cryptos principales ont des hypotheses de rendement distinctes", () => {
+  assert.notEqual(
+    getDefaultAnnualReturnForCrypto("bitcoin"),
+    getDefaultAnnualReturnForCrypto("ethereum"),
+  );
+  assert.notEqual(
+    getDefaultAnnualReturnForCrypto("ethereum"),
+    getDefaultAnnualReturnForCrypto("solana"),
+  );
 });
