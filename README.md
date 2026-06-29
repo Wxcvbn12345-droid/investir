@@ -98,43 +98,116 @@ Dans une intégration réelle, la page `/embed` pourrait être affichée via ifr
   librement avant de lancer sa lecture du résultat.
 - Les résultats sont indicatifs et ne constituent pas un conseil financier.
 
-## Ajouter de vraies données historiques plus tard
+## Évolution production : branchement de données historiques
 
-La démo actuelle utilise un rendement annualisé simple, volontairement facile à lire et à tester.
-Pour en faire un vrai simulateur crypto basé sur l'historique, il faut remplacer les hypothèses de
-`src/lib/crypto-market-assumptions.ts` par une source de prix historiques.
+La version actuelle est volontairement autonome : elle utilise un rendement annualisé estimé, des
+frais simples et une projection composée selon la fréquence choisie. Ce choix permet de livrer une
+démo stable, testable, reproductible et déployable simplement sur Vercel, sans dépendre d'une API
+externe ni d'une clé privée. Pour un test technique court, l'objectif principal est de montrer une
+démo fonctionnelle, une structure claire et une logique de calcul isolée.
 
-La manière la plus propre de le faire serait :
+En production, le simulateur pourrait évoluer vers un vrai backtest historique sans refaire
+l'interface. Le principe serait de remplacer la source de calcul actuelle :
 
-1. Créer un fichier dédié, par exemple `src/lib/crypto-historical-prices.ts`.
-2. Y exposer une fonction simple du type :
+- aujourd'hui : rendement annualisé estimé ;
+- production : série de prix historiques pour la crypto sélectionnée.
+
+Architecture possible :
+
+```txt
+src/
+  lib/
+    crypto-simulation.ts        # moteur actuel de projection
+    historical-simulation.ts    # futur moteur de backtest historique
+    historical-prices.ts        # récupération et normalisation des prix
+  types/
+    historical-prices.ts        # types liés aux prix historiques
+```
+
+Types TypeScript proposés :
 
 ```ts
-type HistoricalPricePoint = {
+export type HistoricalPricePoint = {
   date: string;
   price: number;
 };
 
-async function getHistoricalPrices(
-  crypto: "bitcoin" | "ethereum" | "solana",
-  startDate: string,
-  endDate: string,
-): Promise<HistoricalPricePoint[]> {
-  // Appel API, lecture d'un fichier JSON, ou lecture depuis une base de données.
+export type HistoricalPriceSeries = {
+  cryptoId: string;
+  currency: "eur" | "usd";
+  points: HistoricalPricePoint[];
+};
+
+export type HistoricalPriceProviderInput = {
+  cryptoId: string;
+  startDate: string;
+  endDate: string;
+  currency: "eur" | "usd";
+};
+```
+
+Flux technique attendu :
+
+1. Récupérer les prix historiques de la crypto sélectionnée sur la période demandée.
+2. Normaliser les données : trier les points par date, gérer les dates manquantes, adapter les
+   fréquences quotidienne, hebdomadaire et mensuelle, fixer ou convertir la devise, puis vérifier que
+   les prix sont valides.
+3. Passer la série normalisée au futur moteur de backtest historique.
+4. Calculer les dates d'achat, le montant investi à chaque période, le prix d'achat réel, la quantité
+   de crypto achetée, la quantité totale accumulée, la valeur finale, le capital investi, la
+   plus-value, les frais et les points du graphique.
+
+Exemple de pseudo-code :
+
+```ts
+const prices = await fetchHistoricalPrices({
+  cryptoId: input.crypto,
+  startDate: input.startDate,
+  endDate: input.endDate,
+  currency: "eur",
+});
+
+const result = calculateHistoricalSimulation(input, prices);
+```
+
+Signature possible du futur moteur :
+
+```ts
+export function calculateHistoricalSimulation(
+  input: SimulationInput,
+  prices: HistoricalPriceSeries,
+): SimulationResult {
+  // futur moteur de backtest historique
 }
 ```
 
-3. Remplacer le rendement annualisé moyen par une progression basée sur les vrais prix entre la date
-   de début et la date de fin.
-4. Garder `src/lib/crypto-simulation.ts` comme moteur de calcul principal, mais lui fournir une
-   courbe de prix au lieu d'un taux annuel fixe.
-5. Ajouter des tests avec un petit jeu de données historique figé pour vérifier que le backtest reste
-   stable dans le temps.
+Cette approche permettrait de conserver les composants React actuels, la page principale, la page
+`/embed`, les stratégies existantes, les fréquences, les dates et le format des résultats. Seule la
+source de calcul changerait : au lieu d'appliquer un rendement annualisé moyen, le moteur utiliserait
+les prix historiques réels pour valoriser les achats.
 
-Avec cette structure, l'interface n'a presque pas besoin de changer : la crypto sélectionnée, la date
-de début, la date de fin et la fréquence existent déjà. Il faudra surtout brancher une source fiable
-de prix historiques, puis choisir une règle claire pour les dates sans prix disponible, par exemple
-prendre le prix disponible le plus proche.
+Sources possibles :
+
+- CoinGecko ;
+- CoinMarketCap ;
+- fournisseur interne ;
+- dataset historisé en base ;
+- fichier pré-normalisé.
+
+Points de vigilance production :
+
+- mettre en cache les réponses API ;
+- gérer les limites de requêtes ;
+- prévoir les erreurs réseau ;
+- définir une règle pour les dates sans prix disponible ;
+- clarifier la devise EUR/USD ;
+- distinguer prix journalier et prix intraday ;
+- ajouter des tests de non-régression sur des jeux de données figés ;
+- prévoir un fallback si l'API est indisponible.
+
+L'architecture actuelle facilite cette évolution parce que la logique de calcul est déjà isolée dans
+`src/lib/crypto-simulation.ts`, les dates début/fin sont déjà présentes, les fréquences et stratégies
+sont déjà modélisées, la page `/embed` existe déjà et l'UI reste découplée de la source de données.
 
 ## Limites
 
