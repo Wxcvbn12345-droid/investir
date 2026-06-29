@@ -291,15 +291,6 @@ Une version production pourrait connecter une source de données historiques cry
 - Pas de sauvegarde de simulation.
 - Les frais restent volontairement simplifiés pour garder le modèle compréhensible.
 
-## Suggestions d'amélioration pour S'investir
-
-- Harmoniser les simulateurs autour d'un design system commun.
-- Ajouter un mode embed standardisé pour les articles et landing pages.
-- Proposer un export PDF ou un lien de partage de simulation.
-- Centraliser les hypothèses de calcul pour faciliter la maintenance.
-- Ajouter un tracking des conversions et des interactions clés.
-- Connecter certains simulateurs à HubSpot ou Google Sheets pour qualifier les leads.
-
 ## Vérification
 
 ```bash
